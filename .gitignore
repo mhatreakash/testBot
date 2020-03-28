@@ -1,6 +1,10 @@
 # Specifies intentionally untracked files to ignore when using Git
 # http://git-scm.com/docs/gitignore
 
+/functions/service-account.json
+
+/node_modules
+
 *~
 *.sw[mnpcod]
 .tmp

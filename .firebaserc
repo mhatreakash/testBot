@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "chatbot": "chatbot-rektta",
+    "default": "chatbot-rektta"
+  }
+}

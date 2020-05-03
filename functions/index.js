@@ -3,10 +3,14 @@ const cors = require('cors')({ origin: true});
 const admin = require('firebase-admin');
 const serviceAccount = require('./service-account.json');
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://chatbot-rektta.firebaseio.com"
-});
+// const admin = require('firebase-admin');
+admin.initializeApp();
+
+const db = admin.firestore();
+// admin.initializeApp({
+//   credential: admin.credential.cert(serviceAccount),
+//   databaseURL: "https://chatbot-rektta.firebaseio.com"
+// });
 
 const { SessionsClient } = require('dialogflow');
 
@@ -23,7 +27,7 @@ exports.dialogflowGateway = functions.https.onRequest((request, response) => {
     const responses = await sessionClient.detectIntent({ session, queryInput});
 
     const result = responses[0].queryResult;
-
+    console.log(result);
     response.send(result);
   });
 });
@@ -35,22 +39,23 @@ exports.dialogflowWebhook = functions.https.onRequest(async (request, response) 
 
     const result = request.body.queryResult;
 
-
-    async function userOnboardingHandler(agent) {
+    async function fileReportHandler(agent) {
 
      // Do backend stuff here
-     const db = admin.firestore();
-     const profile = db.collection('users').doc('jeffd23');
+    //  const db = admin.firestore();
+     const profile = db.collection('users').doc('akash');
 
-     const { name, color } = result.parameters;
+     const { name, city } = result.parameters;
 
-      await profile.set({ name, color })
+      await profile.set({ name, city })
       agent.add(`Welcome aboard my friend!`);
     }
 
 
     let intentMap = new Map();
-    intentMap.set('UserOnboarding', userOnboardingHandler);
+    // intentMap.set('Default Welcome Intent', welcome);
+    // intentMap.set('Default Fallback Intent', fallback);
+    intentMap.set('FileReport', fileReportHandler);
     agent.handleRequest(intentMap);
 });
 

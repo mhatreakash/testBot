@@ -3,14 +3,10 @@ const cors = require('cors')({ origin: true});
 const admin = require('firebase-admin');
 const serviceAccount = require('./service-account.json');
 
-// const admin = require('firebase-admin');
-admin.initializeApp();
-
-const db = admin.firestore();
-// admin.initializeApp({
-//   credential: admin.credential.cert(serviceAccount),
-//   databaseURL: "https://chatbot-rektta.firebaseio.com"
-// });
+admin.initializeApp({
+	credential: admin.credential.applicationDefault(),
+  	databaseURL: 'ws://chatbot-rektta.firebaseio.com/'
+});
 
 const { SessionsClient } = require('dialogflow');
 
@@ -35,27 +31,51 @@ exports.dialogflowGateway = functions.https.onRequest((request, response) => {
 const { WebhookClient } = require('dialogflow-fulfillment');
 
 exports.dialogflowWebhook = functions.https.onRequest(async (request, response) => {
-    const agent = new WebhookClient({ request, response });
+  const agent = new WebhookClient({ request, response });
+  console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
+  console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
+ 
+  function welcome(agent) {
+    agent.add(`Welcome to my agent!`);
+  }
+ 
+  function fallback(agent) {
+    agent.add(`I didn't understand`);
+    agent.add(`I'm sorry, can you try again?`);
+  }
+  
+  function fileReportHandler(agent){
+    const text = agent.parameters.name;
+    const text1 = agent.parameters.city;
+    const text2 = agent.parameters.college;
+    const text3 = agent.parameters.year;
+    const text4 = agent.parameters.branch;
+    const text5 = agent.parameters.age;
+    
+    return admin.database().ref('data').set({
+    	name: text,
+      	city: text1,
+      	college: text2,
+      	year: text3,
+      	branch: text4,
+      	age: text5
+    });
+  }
+  
+  function readfromDBHandler(agent){
+    return admin.database().ref('data').once('value').then((snapshot)=> {
+    	const value = snapshot.child('name').val();
+      	// eslint-disable-next-line promise/always-return
+      	if(value !== null){
+        	agent.add(`The value from database is ${value}`);
+        }
+    });
+  }
 
-    const result = request.body.queryResult;
-
-    async function fileReportHandler(agent) {
-
-     // Do backend stuff here
-    //  const db = admin.firestore();
-     const profile = db.collection('users').doc('akash');
-
-     const { name, city } = result.parameters;
-
-      await profile.set({ name, city })
-      agent.add(`Welcome aboard my friend!`);
-    }
-
-
-    let intentMap = new Map();
-    // intentMap.set('Default Welcome Intent', welcome);
-    // intentMap.set('Default Fallback Intent', fallback);
-    intentMap.set('FileReport', fileReportHandler);
-    agent.handleRequest(intentMap);
+  let intentMap = new Map();
+  intentMap.set('Default Welcome Intent', welcome);
+  intentMap.set('Default Fallback Intent', fallback);
+  intentMap.set('FileReport', fileReportHandler);
+  intentMap.set('readfromDB', readfromDBHandler);
+  agent.handleRequest(intentMap);
 });
-

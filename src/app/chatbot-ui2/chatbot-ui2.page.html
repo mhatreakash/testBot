@@ -1,0 +1,47 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>chatbot-ui2</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <div class="chats">
+    <div class="chatbox">
+      <div *ngFor="let chat of messages">
+        <div class="message sent" *ngIf="chat.sender === 'You'">
+          {{chat.text}}
+          <span class="metadata">
+            <span class="time">{{chat.date | date: 'HH:mm aaa'}}</span>
+          </span>
+        </div>
+        <div class="message received" *ngIf="chat.sender =='Bot'">
+          {{chat.text}}
+          <span class="metadata">
+            <span class="time">{{chat.date | date: 'HH:mm aaa'}}</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>
+<ion-footer>
+  <p text-center *ngIf="sending">sending...</p>
+  <form>
+    <ion-row align-items-center no-padding>
+      <ion-col size="10">
+        <textarea autosize maxRows="3" [(ngModel)]="message" (keyup.enter)="sendMessage($event)" name="message"
+          class="message-input" placeholder="send message ..."></textarea>
+        <!-- <ion-input>
+          </ion-input> -->
+      </ion-col>
+      <ion-col class="send-col" size="2">
+        <ion-button expand="block" fill="clear" color="primary" class="msg-btn" (click)="sendMessage()">
+          <ion-icon name="send" slot="icon-only"></ion-icon>
+        </ion-button>
+        <!-- <ion-icon  class="send ion-align-self-center ion-justify-self-center" name="send">
+          </ion-icon> -->
+      </ion-col>
+    </ion-row>
+  </form>
+
+</ion-footer>

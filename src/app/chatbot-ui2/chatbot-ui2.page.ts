@@ -10,19 +10,20 @@ const dialogflowURL = 'https://us-central1-chatbot-rektta.cloudfunctions.net/dia
   styleUrls: ['./chatbot-ui2.page.scss'],
 })
 export class ChatbotUi2Page implements OnInit {
-  messages = [
-    {
-      text: "hi",
-      sender: 'You',
-      date: new Date()
-    },
-    {
-      text: "hellow",
-      sender: 'Bot',
-      date: new Date()
-    }
-  ];
-  // messages = []
+  // messages = [
+  //   {
+  //     text: "hi",
+  //     sender: 'You',
+  //     date: new Date()
+  //   },
+  //   {
+  //     text: "hellow",
+  //     sender: 'Bot',
+  //     date: new Date()
+  //   }
+  // ];
+  messages = [];
+  message;
   sending: boolean;
 
   constructor(private http: HttpClient) { }
@@ -33,10 +34,9 @@ export class ChatbotUi2Page implements OnInit {
   }
   sessionId = Math.random().toString(36).slice(-5);
   sendMessage(event) {
-
-    const text = event.target.value;
+    const text = this.message;
     this.addUserMessage(text);
-    event.target.value = ""
+    this.message = ""
     this.http.post<any>(
       dialogflowURL,
       {

@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>chatbot-ui2</ion-title>
+    <ion-title>Chatbot</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -29,7 +29,7 @@
   <form>
     <ion-row align-items-center no-padding>
       <ion-col size="10">
-        <textarea autosize maxRows="3" [(ngModel)]="message" (keyup.enter)="sendMessage($event)" name="message"
+        <textarea autosize maxRows="3" [(ngModel)]="message" (keyup.enter)="sendMessage()" name="message"
           class="message-input" placeholder="send message ..."></textarea>
         <!-- <ion-input>
           </ion-input> -->

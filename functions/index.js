@@ -52,7 +52,7 @@ exports.dialogflowWebhook = functions.https.onRequest(async (request, response) 
     const text4 = agent.parameters.branch;
     const text5 = agent.parameters.age;
     
-    return admin.database().ref('data').set({
+    return admin.database().ref("data").child("123").push().set({
     	name: text,
       	city: text1,
       	college: text2,

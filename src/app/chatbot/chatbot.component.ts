@@ -20,7 +20,7 @@ export class ChatbotComponent implements OnInit {
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
-    this.addBotMessage('Human presence detected 🤖. How can I help you? ');
+    this.addBotMessage('Hello, my name is Johanna. How can I help you? ');
   }
 
   handleUserMessage(event) {

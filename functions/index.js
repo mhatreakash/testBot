@@ -79,3 +79,59 @@ exports.dialogflowWebhook = functions.https.onRequest(async (request, response) 
   intentMap.set('readfromDB', readfromDBHandler);
   agent.handleRequest(intentMap);
 });
+
+// Sending email code
+/*
+const sgMail = require("@sendgrid/mail");
+sgMail.setApiKey(
+  "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"
+);
+
+const pdf = require('html-pdf');
+
+
+exports.savePdf = functions.https.onRequest(async (request, response) => {
+  return cors(request, response, () => {
+
+    pdf.create(html, options).toBuffer((err, res) => {
+      console.log(res);
+      const data = Buffer.from(res)
+      const attachment = data.toString("base64");
+      const msg = {
+        to: "akash.mhatre@spit.ac.in",
+        from: "dilihi6808@provlst.com",
+        subject: "Case Report",
+        text: "You have a new complaint",
+        attachments: [
+          {
+            content: attachment,
+            filename: "complaint.pdf",
+            type: "application/pdf",
+            disposition: "attachment"
+          }
+        ]
+      }
+
+      if (err) {
+        console.log(err);
+        return response.send("PDF creation error");
+      }
+      console.log("pdf created locally");
+      return sgMail.send(msg);
+      sgMail.send(msg).then(res => {
+        response.statusCode = 200;
+        console.log(res);
+        response.json({ msg: "mail sent" });
+      }).catch(err => {
+        console.log(err.response.body);
+        response.json({ err: "Error" });
+      })
+
+      // return admin.storage().bucket().upload(localPDFFile, { destination: user.name + '.pdf', metadata: { contentType: 'application/pdf' } })
+
+      // return storage.bucket('gs://chatbot-rektta.appspot.com/')
+    })
+  });
+});
+
+*/
